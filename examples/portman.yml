@@ -1,0 +1,7 @@
+proxy_port: 8080
+routes:
+  api.localhost: 8000
+  app.localhost: 3000
+  admin.localhost:
+    port: 9000
+    timeout: 60

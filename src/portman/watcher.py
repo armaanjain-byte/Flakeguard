@@ -100,7 +100,7 @@ def start_watcher(config_path: Path, route_table: RouteTable) -> Any:
     is responsible for calling ``.stop()`` and ``.join()`` on it during
     application shutdown.
     """
-    observer = Observer()
+    observer: Any = Observer()
     handler = ConfigWatcher(config_path, route_table)
 
     # Watch the directory, not the file itself. Editors often write to

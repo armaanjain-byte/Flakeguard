@@ -18,7 +18,9 @@ def tmp_yaml(tmp_path: Path) -> Any:
     Usage::
 
         def test_something(tmp_yaml):
-            cfg_path = tmp_yaml({"proxy_port": 9090, "routes": {"a.local": 3000}})
+            cfg_path = tmp_yaml(
+                {"proxy_port": 9090, "routes": {"a.localhost": 3000}}
+            )
     """
 
     def _write(data: dict[str, Any], filename: str = "portman.yaml") -> Path:

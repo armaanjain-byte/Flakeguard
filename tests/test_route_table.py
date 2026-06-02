@@ -55,7 +55,7 @@ class TestNormaliseDomain:
         assert _normalise_domain("api.localhost...") == "api.localhost"
 
     def test_lowercase_and_strip(self) -> None:
-        assert _normalise_domain("API.Local.") == "api.local"
+        assert _normalise_domain("APP.Localhost.") == "app.localhost"
 
     def test_already_normalised(self) -> None:
         assert _normalise_domain("api.localhost") == "api.localhost"
@@ -365,23 +365,23 @@ class TestEdgeCases:
 
     def test_from_config_on_fresh_instance(self) -> None:
         """from_config returns a new table, not a mutated one."""
-        cfg = _cfg({"a.local": 1000})
+        cfg = _cfg({"a.localhost": 1000})
         t1 = RouteTable.from_config(cfg)
         t2 = RouteTable.from_config(cfg)
 
         assert t1 is not t2
-        assert t1.get("a.local") == t2.get("a.local")
+        assert t1.get("a.localhost") == t2.get("a.localhost")
 
     def test_multiple_sequential_updates(self) -> None:
-        table = RouteTable.from_config(_cfg({"a.local": 1000}))
+        table = RouteTable.from_config(_cfg({"a.localhost": 1000}))
 
-        diff1 = table.update(_cfg({"a.local": 1000, "b.local": 2000}))
-        assert diff1.added == frozenset({"b.local"})
+        diff1 = table.update(_cfg({"a.localhost": 1000, "b.localhost": 2000}))
+        assert diff1.added == frozenset({"b.localhost"})
 
-        diff2 = table.update(_cfg({"b.local": 2000, "c.local": 3000}))
-        assert diff2.added == frozenset({"c.local"})
-        assert diff2.removed == frozenset({"a.local"})
+        diff2 = table.update(_cfg({"b.localhost": 2000, "c.localhost": 3000}))
+        assert diff2.added == frozenset({"c.localhost"})
+        assert diff2.removed == frozenset({"a.localhost"})
 
-        assert table.get("a.local") is None
-        assert table.get("b.local") is not None
-        assert table.get("c.local") is not None
+        assert table.get("a.localhost") is None
+        assert table.get("b.localhost") is not None
+        assert table.get("c.localhost") is not None

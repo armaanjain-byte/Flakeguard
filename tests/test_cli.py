@@ -9,7 +9,7 @@ from unittest.mock import MagicMock
 if TYPE_CHECKING:
     from pathlib import Path
 
-import pytest
+    import pytest
 from typer.testing import CliRunner
 
 from portman.cli import app
@@ -30,11 +30,14 @@ class TestStartCommand:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         config_path = tmp_path / "portman.yml"
-        config_path.write_text("proxy_port: 8080\nroutes:\n  api.local: 8000\n")
+        config_path.write_text(
+            "proxy_port: 8080\nroutes:\n  api.localhost: 8000\n"
+        )
 
         mock_load = MagicMock()
         mock_load.return_value = PortmanConfig(
-            proxy_port=8080, routes=(RouteConfig(domain="api.local", port=8000),)
+            proxy_port=8080,
+            routes=(RouteConfig(domain="api.localhost", port=8000),),
         )
         monkeypatch.setattr("portman.cli.load", mock_load)
 
@@ -91,14 +94,16 @@ class TestStartCommand:
 class TestListCommand:
     def test_list_routes(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         config_path = tmp_path / "portman.yml"
-        config_path.write_text("proxy_port: 8080\nroutes:\n  api.local: 8000\n")
+        config_path.write_text(
+            "proxy_port: 8080\nroutes:\n  api.localhost: 8000\n"
+        )
 
         mock_load = MagicMock()
         mock_load.return_value = PortmanConfig(
             proxy_port=8080,
             routes=(
-                RouteConfig(domain="api.local", port=8000),
-                RouteConfig(domain="db.local", port=5432),
+                RouteConfig(domain="api.localhost", port=8000),
+                RouteConfig(domain="db.localhost", port=5432),
             ),
         )
         monkeypatch.setattr("portman.cli.load", mock_load)
@@ -112,10 +117,10 @@ class TestListCommand:
 
         assert result.exit_code == 0
         assert "Portman Routes" in result.stdout
-        assert "api.local" in result.stdout
+        assert "api.localhost" in result.stdout
         assert "8000" in result.stdout
         assert "Healthy" in result.stdout
-        assert "db.local" in result.stdout
+        assert "db.localhost" in result.stdout
         assert "5432" in result.stdout
         assert "Unreachable" in result.stdout
 
@@ -139,7 +144,9 @@ class TestHostsCommand:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         config_path = tmp_path / "portman.yml"
-        config_path.write_text("proxy_port: 8080\nroutes:\n  api.local: 8000\n")
+        config_path.write_text(
+            "proxy_port: 8080\nroutes:\n  api.localhost: 8000\n"
+        )
 
         mock_load = MagicMock()
         monkeypatch.setattr("portman.cli.load", mock_load)
@@ -153,7 +160,7 @@ class TestHostsCommand:
         result = runner.invoke(app, ["hosts", "install", "--config", str(config_path)])
 
         assert result.exit_code == 0
-        assert "Successfully installed routes into" in result.stdout
+        assert "Successfully installed optional hosts entries into" in result.stdout
         mock_install.assert_called_once_with(
             mock_load.return_value, mock_get_hosts_path.return_value, dry_run=False
         )
@@ -162,7 +169,9 @@ class TestHostsCommand:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         config_path = tmp_path / "portman.yml"
-        config_path.write_text("proxy_port: 8080\nroutes:\n  api.local: 8000\n")
+        config_path.write_text(
+            "proxy_port: 8080\nroutes:\n  api.localhost: 8000\n"
+        )
 
         mock_load = MagicMock()
         monkeypatch.setattr("portman.cli.load", mock_load)
@@ -196,7 +205,7 @@ class TestHostsCommand:
         result = runner.invoke(app, ["hosts", "uninstall"])
 
         assert result.exit_code == 0
-        assert "Successfully uninstalled routes from" in result.stdout
+        assert "Successfully removed optional hosts entries from" in result.stdout
         mock_uninstall.assert_called_once_with(
             mock_get_hosts_path.return_value, dry_run=False
         )

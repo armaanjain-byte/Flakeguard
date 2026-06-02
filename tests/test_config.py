@@ -144,8 +144,8 @@ class TestDomainValidation:
         "domain",
         [
             "api.localhost",
-            "app.local",
-            "my-service.dev.local",
+            "app.localhost",
+            "my-service.dev.localhost",
             "a",
             "a.b.c.d.e",
             "UPPER.case",
@@ -160,10 +160,10 @@ class TestDomainValidation:
         "domain",
         [
             "",
-            "-leading-hyphen.local",
-            "trailing-hyphen-.local",
-            "has space.local",
-            "under_score.local",
+            "-leading-hyphen.localhost",
+            "trailing-hyphen-.localhost",
+            "has space.localhost",
+            "under_score.localhost",
             "no..double.dot",
         ],
     )
@@ -304,13 +304,13 @@ class TestEdgeCases:
             cfg.proxy_port = 1234  # type: ignore[misc]
 
     def test_boundary_port_min(self, tmp_yaml: Any) -> None:
-        path = tmp_yaml({"proxy_port": _MIN_PORT, "routes": {"a.local": 2}})
+        path = tmp_yaml({"proxy_port": _MIN_PORT, "routes": {"a.localhost": 2}})
         cfg = load(path)
         assert cfg.proxy_port == _MIN_PORT
 
     def test_boundary_port_max(self, tmp_yaml: Any) -> None:
         path = tmp_yaml(
-            {"proxy_port": _MAX_PORT, "routes": {"a.local": _MAX_PORT - 1}}
+            {"proxy_port": _MAX_PORT, "routes": {"a.localhost": _MAX_PORT - 1}}
         )
         cfg = load(path)
         assert cfg.proxy_port == _MAX_PORT

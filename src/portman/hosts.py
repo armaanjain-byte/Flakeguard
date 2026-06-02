@@ -1,4 +1,9 @@
-"""Manage the system hosts file for local routing."""
+"""Experimental helpers for optional hosts file integration.
+
+Core Portman usage should prefer ``*.localhost`` domains, which do not
+require hosts file changes on modern systems. These helpers remain available
+for custom domains that users explicitly choose to manage themselves.
+"""
 
 import os
 from pathlib import Path

@@ -18,7 +18,8 @@ from portman.watcher import start_watcher
 
 app = typer.Typer(help="Portman Local Reverse Proxy", add_completion=False)
 hosts_app = typer.Typer(
-    help="Manage system hosts file for local routing.", add_completion=False
+    help="Experimental: manage hosts entries for custom local domains.",
+    add_completion=False,
 )
 app.add_typer(hosts_app, name="hosts")
 
@@ -141,7 +142,7 @@ def hosts_install(
         typer.Option("--dry-run", help="Preview changes without modifying the file."),
     ] = False,
 ) -> None:
-    """Install portman routes into the system hosts file."""
+    """Optionally install routes into the system hosts file."""
     from portman.hosts import get_hosts_path, install_hosts
 
     try:
@@ -155,16 +156,19 @@ def hosts_install(
         new_content = install_hosts(config, hosts_path, dry_run=dry_run)
         if dry_run:
             console.print(
-                f"[yellow]DRY RUN: The following changes would be written to {hosts_path}:[/yellow]"
+                "[yellow]DRY RUN: The following changes would be written to "
+                f"{hosts_path}:[/yellow]"
             )
             console.print(new_content)
         else:
             console.print(
-                f"[green]Successfully installed routes into {hosts_path}[/green]"
+                "[green]Successfully installed optional hosts entries into "
+                f"{hosts_path}[/green]"
             )
     except PermissionError:
         console.print(
-            f"[red]Permission denied modifying {hosts_path}. Try running as Administrator/root.[/red]"
+            f"[red]Permission denied modifying {hosts_path}. "
+            "Try running as Administrator/root.[/red]"
         )
         raise typer.Exit(code=1) from None
 
@@ -176,7 +180,7 @@ def hosts_uninstall(
         typer.Option("--dry-run", help="Preview changes without modifying the file."),
     ] = False,
 ) -> None:
-    """Uninstall portman routes from the system hosts file."""
+    """Remove optional portman routes from the system hosts file."""
     from portman.hosts import get_hosts_path, uninstall_hosts
 
     hosts_path = get_hosts_path()
@@ -184,16 +188,19 @@ def hosts_uninstall(
         new_content = uninstall_hosts(hosts_path, dry_run=dry_run)
         if dry_run:
             console.print(
-                f"[yellow]DRY RUN: The following changes would be written to {hosts_path}:[/yellow]"
+                "[yellow]DRY RUN: The following changes would be written to "
+                f"{hosts_path}:[/yellow]"
             )
             console.print(new_content)
         else:
             console.print(
-                f"[green]Successfully uninstalled routes from {hosts_path}[/green]"
+                "[green]Successfully removed optional hosts entries from "
+                f"{hosts_path}[/green]"
             )
     except PermissionError:
         console.print(
-            f"[red]Permission denied modifying {hosts_path}. Try running as Administrator/root.[/red]"
+            f"[red]Permission denied modifying {hosts_path}. "
+            "Try running as Administrator/root.[/red]"
         )
         raise typer.Exit(code=1) from None
 

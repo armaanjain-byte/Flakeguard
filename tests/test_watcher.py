@@ -3,15 +3,19 @@
 from __future__ import annotations
 
 import logging
-from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
-import pytest
 from watchdog.events import FileModifiedEvent
 
 from portman.config import PortmanConfig
 from portman.route_table import RouteTable, RouteTableDiff
 from portman.watcher import ConfigWatcher
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import pytest
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -24,7 +28,9 @@ def _dummy_diff(has_changes: bool = True) -> RouteTableDiff:
             added=frozenset(), removed=frozenset(), changed=frozenset()
         )
     return RouteTableDiff(
-        added=frozenset({"test.local"}), removed=frozenset(), changed=frozenset()
+        added=frozenset({"test.localhost"}),
+        removed=frozenset(),
+        changed=frozenset(),
     )
 
 
@@ -63,7 +69,9 @@ class TestConfigWatcher:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         config_file = tmp_path / "portman.yml"
-        config_file.write_text("proxy_port: 8080\nroutes:\n  api.local: 8000\n")
+        config_file.write_text(
+            "proxy_port: 8080\nroutes:\n  api.localhost: 8000\n"
+        )
 
         table = MagicMock(spec=RouteTable)
         table.update.return_value = _dummy_diff()
@@ -106,13 +114,15 @@ class TestConfigWatcher:
     ) -> None:
         caplog.set_level(logging.INFO)
         config_file = tmp_path / "portman.yml"
-        config_file.write_text("proxy_port: 8080\nroutes:\n  api.local: 8000\n")
+        config_file.write_text(
+            "proxy_port: 8080\nroutes:\n  api.localhost: 8000\n"
+        )
 
         table = MagicMock(spec=RouteTable)
         table.update.return_value = RouteTableDiff(
-            added=frozenset({"new.local"}),
-            removed=frozenset({"old.local"}),
-            changed=frozenset({"changed.local"}),
+            added=frozenset({"new.localhost"}),
+            removed=frozenset({"old.localhost"}),
+            changed=frozenset({"changed.localhost"}),
         )
 
         mock_load = MagicMock(return_value=PortmanConfig(proxy_port=8080, routes=()))
@@ -123,9 +133,9 @@ class TestConfigWatcher:
         watcher._reload()
 
         assert "Config reloaded successfully." in caplog.text
-        assert "Added routes: new.local" in caplog.text
-        assert "Removed routes: old.local" in caplog.text
-        assert "Changed routes: changed.local" in caplog.text
+        assert "Added routes: new.localhost" in caplog.text
+        assert "Removed routes: old.localhost" in caplog.text
+        assert "Changed routes: changed.localhost" in caplog.text
 
     def test_logs_when_no_changes(
         self,

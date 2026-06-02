@@ -7,7 +7,10 @@ ports.
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Iterable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 async def check_port(port: int, timeout: float = 1.0) -> bool:
