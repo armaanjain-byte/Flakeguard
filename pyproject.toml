@@ -14,7 +14,12 @@ dependencies = [
     "pydantic>=2.0,<3.0",
     "PyYAML>=6.0,<7.0",
     "watchdog>=4.0,<5.0",
+    "typer>=0.9,<1.0",
+    "rich>=13.0,<14.0",
 ]
+
+[project.scripts]
+portman = "portman.cli:app"
 
 [project.optional-dependencies]
 dev = [
