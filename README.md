@@ -6,8 +6,8 @@
 
 <div align="center">
 
-[![PyPI version](https://img.shields.io/pypi/v/portman-proxy.svg)](https://pypi.org/project/portman-proxy/)
-[![Python versions](https://img.shields.io/pypi/pyversions/portman-proxy.svg)](https://pypi.org/project/portman-proxy/)
+[![PyPI version](https://img.shields.io/pypi/v/portman-proxy?cacheSeconds=300)](https://pypi.org/project/portman-proxy/)
+[![Python versions](https://img.shields.io/pypi/pyversions/portman-proxy?cacheSeconds=300)](https://pypi.org/project/portman-proxy/)
 [![License](https://img.shields.io/pypi/l/portman-proxy.svg)](https://github.com/armaanjain-byte/portman/blob/main/LICENSE)
 [![CI](https://github.com/armaanjain-byte/portman/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/armaanjain-byte/portman/actions/workflows/test.yml)
 
