@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "portman"
+name = "portman-proxy"
 version = "0.1.0"
 description = "Local reverse proxy for production-like .localhost domains"
 readme = "README.md"
