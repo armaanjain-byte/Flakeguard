@@ -1,0 +1,6 @@
+proxy_port: 8080
+
+routes:
+  api.localhost: 8000
+  app.localhost: 3000
+  docs.localhost: 9000
