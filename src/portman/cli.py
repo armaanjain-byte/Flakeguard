@@ -29,7 +29,7 @@ console = Console()
 def version_callback(value: bool) -> None:
     """Print the version and exit."""
     if value:
-        v = version("portman")
+        v = version("portman-proxy")
         typer.echo(f"Portman {v}")
         raise typer.Exit()
 
