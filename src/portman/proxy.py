@@ -22,6 +22,7 @@ The sole entry-point is :func:`create_app`, which returns a fully-wired
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from collections.abc import Awaitable, Callable
 from typing import TYPE_CHECKING, Any
@@ -135,16 +136,15 @@ async def _proxy_handler(request: web.Request) -> web.StreamResponse:
     timeout = ClientTimeout(total=entry.timeout)
 
     try:
-        body = await request.read()
         upstream_resp = await session.request(
             method=request.method,
             url=upstream_url,
             headers=headers,
-            data=body if body else None,
+            data=request.content,
             timeout=timeout,
             allow_redirects=False,
         )
-    except TimeoutError:
+    except asyncio.TimeoutError:
         logger.warning(
             "Upstream timeout for %s after %ds",
             upstream_url,

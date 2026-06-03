@@ -106,7 +106,7 @@ async def ws_proxy_handler(
                 upstream_to_client(),
             )
 
-    except TimeoutError:
+    except asyncio.TimeoutError:
         logger.warning("WebSocket upstream timeout: %s", upstream_url)
         if not client_ws.closed:
             await client_ws.close(code=1011, message=b"Upstream Timeout")
