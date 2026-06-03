@@ -21,7 +21,7 @@ runner = CliRunner()
 def test_version() -> None:
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    v = version("portman")
+    v = version("portman-proxy")
     assert f"Portman {v}" in result.stdout
 
 
